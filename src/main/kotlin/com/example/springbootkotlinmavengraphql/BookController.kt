@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller
 class BookController {
     @QueryMapping
     fun bookById(@Argument id: String?, environment: DataFetchingEnvironment): Book? {
-        print("getting book by ID")
         return utils.bookById(id!!)
     }
 

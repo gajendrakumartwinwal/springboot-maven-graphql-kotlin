@@ -21,9 +21,11 @@ fun main(args: Array<String>) {
 		"com.example.springbootkotlinmavengraphql",
 	)
 
+	// Resolve a "Product" type from the _entities query
 
 	// Generate the schema
-	val hooks = FederatedSchemaGeneratorHooks(emptyList())
+	val resolvers = listOf(ProductResolver())
+	val hooks = FederatedSchemaGeneratorHooks(resolvers)
 	val config = FederatedSchemaGeneratorConfig(supportedPackages = basePackages, hooks = hooks)
 	val queries = listOf(TopLevelObject(BookQuery()))
 
