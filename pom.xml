@@ -62,7 +62,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.expediagroup</groupId>
-			<artifactId>graphql-kotlin-schema-generator</artifactId>
+			<artifactId>graphql-kotlin-federation</artifactId>
 			<version>6.5.3</version>
 		</dependency>
 	</dependencies>

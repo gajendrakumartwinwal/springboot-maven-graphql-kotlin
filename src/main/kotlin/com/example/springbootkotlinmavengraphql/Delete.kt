@@ -1,36 +1,36 @@
 package com.example.springbootkotlinmavengraphql
 
-import com.example.springbootkotlinmavengraphql.schemagenerate.BookMutation
 import com.example.springbootkotlinmavengraphql.schemagenerate.BookQuery
-import com.expediagroup.graphql.generator.SchemaGeneratorConfig
 import com.expediagroup.graphql.generator.TopLevelObject
 import com.expediagroup.graphql.generator.extensions.print
-import com.expediagroup.graphql.generator.toSchema
+import com.expediagroup.graphql.generator.federation.FederatedSchemaGeneratorConfig
+import com.expediagroup.graphql.generator.federation.FederatedSchemaGeneratorHooks
+import com.expediagroup.graphql.generator.federation.toFederatedSchema
 import graphql.schema.GraphQLSchema
 import java.nio.file.Paths
 import java.util.function.Predicate
 
-fun generateSdl(schema: GraphQLSchema): String = schema.print(
+fun generateSdl1(schema: GraphQLSchema): String = schema.print(
 	includeDirectivesFilter = Predicate {
 		true
 	}
 )
 
 fun main(args: Array<String>) {
-	val widgetQuery = BookQuery()
-	val widgetMutation = BookMutation()
 	val basePackages = listOf(
 		"com.example.springbootkotlinmavengraphql",
 	)
-	val schema = toSchema(
-		config = SchemaGeneratorConfig(
-			supportedPackages = basePackages
-		),
-		queries = listOf(TopLevelObject(widgetQuery)),
-		mutations = listOf(TopLevelObject(widgetMutation))
-	)
 
-	val sdl = generateSdl(schema)
+
+	// Generate the schema
+	val hooks = FederatedSchemaGeneratorHooks(emptyList())
+	val config = FederatedSchemaGeneratorConfig(supportedPackages = basePackages, hooks = hooks)
+	val queries = listOf(TopLevelObject(BookQuery()))
+
+	val schema = toFederatedSchema(config, queries)
+
+
+	val sdl = generateSdl1(schema)
 
 
 	print(sdl.toString())

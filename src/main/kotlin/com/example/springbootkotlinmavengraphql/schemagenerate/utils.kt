@@ -1,8 +1,8 @@
-package com.example.springbootkotlinmavengraphql
+package com.example.springbootkotlinmavengraphql.schemagenerate
 
 import java.util.*
 
-data class Book(val id: String, val name: String, val pageCount: Int, val authorId: String) {
+class utils {
     companion object {
         private var books = Arrays.asList(
             Book("book-1", "Effective Java", 416, "author-1"),

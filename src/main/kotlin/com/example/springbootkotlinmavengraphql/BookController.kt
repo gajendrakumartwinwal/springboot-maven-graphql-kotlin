@@ -1,5 +1,7 @@
 package com.example.springbootkotlinmavengraphql
 
+import com.example.springbootkotlinmavengraphql.schemagenerate.Book
+import com.example.springbootkotlinmavengraphql.schemagenerate.utils
 import graphql.schema.DataFetchingEnvironment
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -12,11 +14,11 @@ class BookController {
     @QueryMapping
     fun bookById(@Argument id: String?, environment: DataFetchingEnvironment): Book? {
         print("getting book by ID")
-        return Book.bookById(id!!)
+        return utils.bookById(id!!)
     }
 
     @SchemaMapping
     fun saveWidget(book: Book): Book? {
-        return Book.saveWidget(book)
+        return utils.saveWidget(book)
     }
 }

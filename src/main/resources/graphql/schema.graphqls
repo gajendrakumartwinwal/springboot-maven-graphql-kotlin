@@ -1,6 +1,5 @@
 schema {
   query: Query
-  mutation: Mutation
 }
 
 "Marks the field, argument, input field or enum value as deprecated"
@@ -9,11 +8,26 @@ directive @deprecated(
     reason: String = "No longer supported"
   ) on FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM_VALUE | INPUT_FIELD_DEFINITION
 
+"Marks target object as extending part of the federated schema"
+directive @extends on OBJECT | INTERFACE
+
+"Marks target field as external meaning it will be resolved by federated schema"
+directive @external on FIELD_DEFINITION
+
 "Directs the executor to include this field or fragment only when the `if` argument is true"
 directive @include(
     "Included when true."
     if: Boolean!
   ) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"Space separated list of primary keys needed to access federated object"
+directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
+
+"Specifies the base type field set that will be selectable by the gateway"
+directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
+
+"Specifies required input field set from the base type for a resolver"
+directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
 
 "Directs the executor to skip this field or fragment when the `if` argument is true."
 directive @skip(
@@ -27,26 +41,28 @@ directive @specifiedBy(
     url: String!
   ) on SCALAR
 
-type Book {
+union _Entity = Book
+
+type Book @key(fields : "id") {
   authorId: String!
-  "This is id"
   id: String!
   name: String!
   pageCount: Int!
 }
 
-type Mutation {
-  saveWidget(book: BookInput!): Book!
-}
-
-type Query {
+type Query @extends {
+  "Union of all types that use the @key directive, including both types native to the schema and extended types"
+  _entities(representations: [_Any!]!): [_Entity]!
+  _service: _Service!
   bookById(id: String!): Book
 }
 
-input BookInput {
-  authorId: String!
-  "This is id"
-  id: String!
-  name: String!
-  pageCount: Int!
+type _Service {
+  sdl: String!
 }
+
+"Federation scalar type used to represent any external entities passed to _entities query."
+scalar _Any
+
+"Federation type representing set of fields"
+scalar _FieldSet
